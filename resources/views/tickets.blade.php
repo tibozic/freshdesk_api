@@ -4,18 +4,21 @@
 
 @section('content')
     <h1>Fresdesk Tickets:</h1> 
-    @foreach($tickets as $ticket)
-        <div class="ticket">
-            <h3>{{$ticket['subject']}}</h3>
-            <p>
-                {{$ticket['description']}}<br>
-                {{$ticket['id']}}<br>
-            </p>
-            <?php
-                print_r($ticket);
-            ?>
-        </div>
-    @endforeach
+    <p>Tukaj so izpisani vsi ticketi ki se nahajajo v Freshdesk.</p>
+    <table border=1 class="table">
 
+        <tr>
+            <th>Naslov</th><th>Zadnja posodobitev</th><th>Prioriteta</th><th>Status</th><th>Opis<th>
+        </tr>
+        @foreach($tickets as $ticket)
+        <tr>
+            <td>{{$ticket['subject']}}</td>
+            <td>{{$ticket['updated_at']}}</td>
+            <td>{{$ticket['priority']}}</td>
+            <td>{{$ticket['status']}}</td>
+            <td>{{$ticket['description']}}</td>
+        </tr>
+    @endforeach
+    </table>
 @endsection
 

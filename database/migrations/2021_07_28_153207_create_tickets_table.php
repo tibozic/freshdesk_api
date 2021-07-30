@@ -18,12 +18,10 @@ class CreateTicketsTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('status');
-            $table->integer('priority');
-            $table->boolean('urgent');
+            $table->string('priority');
             $table->string('requester');
             $table->string('responder');
             $table->string('due_by');
-            $table->string('crated_at');
             $table->timestamps();
         });
     }

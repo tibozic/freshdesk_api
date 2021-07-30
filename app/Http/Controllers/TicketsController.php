@@ -87,16 +87,18 @@ class TicketsController extends Controller
            Preko vhoda dobi ticket in ga sharni v bazo 
         */
 
-
-        $temp = new Ticket;
-        $temp->id = $ticket['id'];
-        $temp->name = $ticket['subject'];
-        $temp->description = $ticket['description'];
-        $temp->requester = $ticket['requester_name'];
-        $temp->responder = $ticket['responder_name'];
-        $temp->status = $ticket['status'];
-        $temp->priority = $ticket['priority'];
-        $temp->save();
+        DB::table('Tickets')->insert([
+             'id' => $ticket['id'],
+             'name' => $ticket['subject'],
+             'description' => $ticket['description'],
+             'requester' => $ticket['requester_name'],
+             'responder' => $ticket['responder_name'],
+             'status' => $ticket['status'],
+             'priority' => $ticket['priority'],
+             'due_by' => $ticket['due_by'],
+             'created_at' => (string) $ticket['created_at'],
+             'updated_at' => (string) $ticket['updated_at'],
+        ]);
 
         return back();
     }
@@ -113,17 +115,63 @@ class TicketsController extends Controller
     }
 
 
+    public function ticket_update($ticket)
+    {
+        /*
+            Kot vhod dobi podatke o ticketu, ki ga je potrebno posodobiti in
+            ga posodobi
+        */
+        DB::table('Tickets')
+            ->where('id', $ticket['id'])
+            ->update([
+                'name' => $ticket['subject'],
+                'description' => $ticket['description'],
+                'requester' => $ticket['requester_name'],
+                'responder' => $ticket['responder_name'],
+                'status' => $ticket['status'],
+                'priority' => $ticket['priority'],
+                'due_by' => $ticket['due_by'],
+                'created_at' => (string) $ticket['created_at'],
+                'updated_at' => (string) $ticket['updated_at'],
+            ]);
+
+
+        return back();
+    }
+
+
     public function database_update()
     {
+        /*
+            Z pomočjo Freshdesk API pridobi vse tickete in pregleda
+            če so že v bazi. 
+        */
         $tickets = TicketsController::tickets_get();
 
         foreach ($tickets as $ticket)
         {
             
-            // Preveri če je ticket že v bazi, če ni ga doda
-            if (DB::table('Tickets')->find($ticket['id']) === null)
+            // Preveri če je ticket v bazi
+            $instance = DB::table('Tickets')->find($ticket['id']);
+            if ($instance === null)
             {
+                /*
+                    Če ticketa ni v bazi kliče funkcijo ki ga v bazo doda.
+                 */
                 TicketsController::ticket_store($ticket);
+            }
+            else
+            {
+
+                /*
+                    Če je ticket v bazi primerja datum zadnje spremembe, če je potrebno 
+                    ticket posodobi.
+                */
+                if ($instance->updated_at < $ticket['updated_at'])
+                {
+                    TicketsController::ticket_update($ticket);
+                }
+
             }
         }
 

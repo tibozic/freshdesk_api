@@ -12,14 +12,28 @@ class Ticket extends Model
     protected $table = 'Tickets';
     protected $primaryKey = 'id';
     public $incrementing = false;
-    public $title;
+    public $name;
     public $description;
     public $requester;
     public $responder;
     public $status;
     public $priority;
-    public $updated_at;
-    public $created_at;
+    public $last_update;
+    public $created;
+    public $due_by;
+
+    protected $attributes = [
+        'name' => "",
+        'description' => "",
+        'requester' => "",
+        'responder' => "",
+        'status' => "",
+        'priority' => "",
+        'last_update' => "",
+        'created' => "",
+        'due_by' => ""
+    ];
+
 
     protected $connection = 'sqlite';
  

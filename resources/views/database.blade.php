@@ -6,6 +6,6 @@
     <a href="update"><button type="button" class="btn btn-primary">Posodobi bazo</button></a>
     <a href="delete"><button type="button" class="btn btn-danger">Izprazni bazo</button></a>
     @foreach($tickets as $ticket)
-        <h3>{{$ticket->name}}</h3>
+        <h3>{{$ticket->id . " " . $ticket->name}}</h3>
     @endforeach
 @endsection

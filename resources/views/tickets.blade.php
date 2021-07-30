@@ -9,9 +9,10 @@
             <h3>{{$ticket['subject']}}</h3>
             <p>
                 {{$ticket['description']}}<br>
+                {{$ticket['id']}}<br>
             </p>
             <?php
-                // print_r($ticket);
+                print_r($ticket);
             ?>
         </div>
     @endforeach

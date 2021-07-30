@@ -13,7 +13,9 @@ class TicketsController extends Controller
     //
     public function list_freshdesk()
     {
-
+        /*
+            Z pomočjo Freshdesk API izpiše vse tickete
+        */
         $tickets = TicketsController::tickets_get();
 
         return view('tickets', [
@@ -25,6 +27,9 @@ class TicketsController extends Controller
 
     public function list_database()
     {
+        /*
+            Iz podatkovne baze izpiše vse vnose 
+        */
         $tickets = Ticket::all();        
 
         return view('database', [
@@ -50,6 +55,10 @@ class TicketsController extends Controller
 
     public function tickets_get()
     {
+        /*
+            Z pomočjo Freshdesk API pridobi vse tickete in jih vrne v JSON
+            obliki
+        */
         $url_domain = 'https://timibozic.freshdesk.com/helpdesk/';
         $url_api = 'tickets.json'; # api url (za ticket), lahko .json ali .xml
         $url_full = $url_domain . $url_api;
@@ -71,21 +80,25 @@ class TicketsController extends Controller
 
     }
 
-
-    public function tickets_store()
+    
+    public function ticket_store($ticket)
     {
         /*
-            Preki API dobi vse ticekete in jih doda v bazo
+           Preko vhoda dobi ticket in ga sharni v bazo 
         */
-        $tickets = TicketsController::tickets_get();
 
-        foreach ($tickets as $ticket)
-        {
-            $temp = new Ticket;
-            $temp->name = $ticket['subject'];
-            $temp->save();
-        }
-       return back();
+
+        $temp = new Ticket;
+        $temp->id = $ticket['id'];
+        $temp->name = $ticket['subject'];
+        $temp->description = $ticket['description'];
+        $temp->requester = $ticket['requester_name'];
+        $temp->responder = $ticket['responder_name'];
+        $temp->status = $ticket['status'];
+        $temp->priority = $ticket['priority'];
+        $temp->save();
+
+        return back();
     }
 
 
@@ -94,7 +107,26 @@ class TicketsController extends Controller
         /*
             Izprazni bazo
         */
-        DB::delete("DELETE FROM Tickets");
+        DB::table('Tickets')->delete();
+
+        return back();
+    }
+
+
+    public function database_update()
+    {
+        $tickets = TicketsController::tickets_get();
+
+        foreach ($tickets as $ticket)
+        {
+            
+            // Preveri če je ticket že v bazi, če ni ga doda
+            if (DB::table('Tickets')->find($ticket['id']) === null)
+            {
+                TicketsController::ticket_store($ticket);
+            }
+        }
+
 
         return back();
     }

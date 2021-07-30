@@ -30,7 +30,7 @@ class TicketsController extends Controller
         /*
             Iz podatkovne baze izpiše vse vnose 
         */
-        $tickets = Ticket::all();        
+        $tickets = DB::table('Tickets')->orderBy('created_at', 'desc')->get();
 
         return view('database', [
             'tickets'  => $tickets,

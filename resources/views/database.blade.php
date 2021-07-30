@@ -14,11 +14,11 @@
         </tr>
         @foreach($tickets as $ticket)
         <tr>
-            <td>{{$ticket['name']}}</td>
-            <td>{{$ticket['updated_at']}}</td>
-            <td>{{$ticket['priority']}}</td>
-            <td>{{$ticket['status']}}</td>
-            <td>{{$ticket['description']}}</td>
+            <td>{{$ticket->name}}</td>
+            <td>{{$ticket->updated_at}}</td>
+            <td>{{$ticket->priority}}</td>
+            <td>{{$ticket->status}}</td>
+            <td>{{$ticket->description}}</td>
         </tr>
     @endforeach
     </table>

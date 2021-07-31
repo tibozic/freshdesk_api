@@ -42,7 +42,8 @@ class TicketsController extends Controller
     private function token_get()
     {
         /*
-             API ključ je shranjen v datoteki (.api_key)
+             API ključ je shranjen v datoteki (.api_key).
+             Za pravilno delovanje se mora ta datotka nahajati v domači mapi projekta.
              Prebere ključ in ga vrne
         */
         $token_filename = '.api_key';

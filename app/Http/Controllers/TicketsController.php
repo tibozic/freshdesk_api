@@ -45,7 +45,21 @@ class TicketsController extends Controller
              API ključ je shranjen v datoteki (.api_key)
              Prebere ključ in ga vrne
         */
-        $token_filename = '../.api_key';
+        $token_filename = '.api_key';
+
+        /*
+            Glede na lokacijo iz katere kličmo to funkcijo (controller, artisan command)
+            se lokacija spremeni, zato moramo preveriti če datoteka obstaja.
+
+            V primeru da kličemo to funkcijo iz trenutnega controller se je potrebno
+            pomakniti eno mapo nazaj (../.api_key).
+            V primeru da pa kličemo to funkcijo iz artisan ukaza pa se nahaja datoteka
+            v domači mapi (.api_key)
+        */
+        if (!file_exists($token_filename))
+        {
+            $token_filename = "../" . $token_filename;
+        }
         $token_file = fopen($token_filename, "r");
         $api_token = fread($token_file, filesize($token_filename));
         fclose($token_file);

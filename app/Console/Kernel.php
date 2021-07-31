@@ -26,7 +26,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->call("App\Http\Controllers\TicketsController@database_update")->everyMintue();
+
+        // Vsako 1 minuto posodobi podatkovno bazo z novimi podatki
+        $schedule->command('database:update')
+                 ->everyMinute();
     }
 
     /**
